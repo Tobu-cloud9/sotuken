@@ -2,7 +2,8 @@ version: "3"
 services:
     web:
         container_name: project_django
-        build: .
+        image: docker_django:latest
+        build: ./build
         restart: on-failure
         tty: true
         working_dir: /code
@@ -15,12 +16,13 @@ services:
 
         command: >
             bash -c "
+                    python manage.py migrate &&
                     python manage.py runserver 0.0.0.0:8000
                 "
     db:
-        container_name: djst_mysql
+        container_name: db_mysql
         image: mysql:5.7
-        restart: always
+        restart: on-failure
         environment:
             MYSQL_DATABASE: $DB_NAME
             MYSQL_USER: $DB_USER
